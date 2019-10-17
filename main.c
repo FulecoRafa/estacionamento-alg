@@ -16,7 +16,7 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     scanf("%d", &saida);
     preco = 3*saida;
     saida += chegada;
-
+    //gerar desconto
     carro *c = carro_cria(placa, chegada, saida, preco, 0);
     if(stack_search(s, c) || queue_search(q, c)) {
         printf("Carro já estacionado!\n");

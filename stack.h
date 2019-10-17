@@ -6,13 +6,7 @@
 typedef struct _stack stack;
 
 typedef struct _node node;
-//Defines the stack's structure
-struct _stack{
-    node* TOP;
-    int SIZE;
-    int FILL;
-    int VERBOSE;
-};
+
 
 stack* create_stack(int max , int verbose);
 

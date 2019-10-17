@@ -39,8 +39,6 @@ float descontoGetter(carro *c) {
     return c->desconto;
 }
 
-void carro_imprime(carro *c) {
-    printf("###############\n");
-    printf("PLACA-> %d\nCHEGADA-> %d\nSAIDA-> %d\nDESCONTO-> %.2f\n", placaGetter(c), chegadaGetter(c), saidaGetter(c), descontoGetter(c));
-    printf("###############\n");
+void applyDiscount(carro *c , float discount){
+    c->desconto = discount;
 }

@@ -40,6 +40,13 @@ carro *item_getter(node* n){
 }
 //-------------------------------------------------------------------------------------------------------------------------------
 
+//Defines the stack's structure
+struct _stack{
+    node* TOP;
+    int SIZE;
+    int FILL;
+    int VERBOSE;
+};
 
 //Creates the stack. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the nodes).
 stack* create_stack(int max , int VERBOSE){
@@ -144,8 +151,9 @@ void print_stack(stack *s){
         printf("#--Placa: %d--#\n" , placaGetter(it->car));
         printf("#--Chegada: %02d-#\n" , chegadaGetter(it->car));
         printf("#--Saída: %02d-#\n" , saidaGetter(it->car));
-        printf("#--Valor a pagar: R$%d,00-#\n");
+        printf("#--Valor a pagar: R$%d,00-#\n" , precoGetter(it->car));
         printf("#--Desconto: %.2f-#\n" , descontoGetter(it->car));
+        printf("#--Valor: %.2f-#\n" , ((float)(precoGetter(it->car))) - descontoGetter(it->car));
         it=it->next;
     }
     printf("#######\n");
