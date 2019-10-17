@@ -158,7 +158,10 @@ void print_queue(queue *q){
     node* it = q->HEAD;
     while(it){
         printf("#-----#\n");
-        printf("#--placa: %d--#\n" , placaGetter(it->car));
+        printf("#--Placa: %d--#\n" , placaGetter(it->car));
+        printf("#--Chegada: %02d-#\n" , chegadaGetter(it->car));
+        printf("#--Saída: %02d-#\n" , saidaGetter(it->car));
+        printf("#--Desconto: %.2f-#\n" , descontoGetter(it->car));
         it=it->next;
     }
     printf("#-----#\n");

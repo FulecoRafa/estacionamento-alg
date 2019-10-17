@@ -141,7 +141,10 @@ void print_stack(stack *s){
     node* it = s->TOP;
     while(it){
         printf("#-----#\n");
-        printf("#--placa: %d--#\n" , placaGetter(it->car));
+        printf("#--Placa: %d--#\n" , placaGetter(it->car));
+        printf("#--Chegada: %02d-#\n" , chegadaGetter(it->car));
+        printf("#--Saída: %02d-#\n" , saidaGetter(it->car));
+        printf("#--Desconto: %.2f-#\n" , descontoGetter(it->car));
         it=it->next;
     }
     printf("#######\n");

@@ -1,6 +1,10 @@
 #include "stack.h"
 #include "queue.h"
 
+
+#define clear() printf("\033[H\033[J")
+#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x));
+
 // Define o carro e insere, se possível, no estacionamento
 int carro_checkin(queue *q, stack *s) {
     int placa, chegada, saida;
@@ -13,12 +17,12 @@ int carro_checkin(queue *q, stack *s) {
     saida += chegada;
 
     carro *c = carro_cria();
-    //rejeicao
-    if(carro_disponibilidade(c, q, s) == 1) {
+    carro_checkout(c , q , s);
+    int rejeicao = carro_rejeicao(c , q , s);
+    if(rejeicao == 1) {
         stack_pile(s, c);
         return 1;
-    }
-    else {
+    }else if(rejeicao == 2){
         queue_insert(q, c);
         return 1;
     }
@@ -30,13 +34,13 @@ int carro_checkin(queue *q, stack *s) {
 // Imprime os dados e remove os carros expirados em relacao ao novo carro
 int carro_checkout(carro *c, queue *q, stack *s) {
     while(1) {
-        if(getterSaida(queue_HEAD(q)) <= getterSaida(c)) {
+        if(getterSaida(queue_HEAD(q)) <= getterChegada(c)) {
             carro_imprime(queue_next(q));
         } else break;
     }
 
     while(1) {
-        if(getterSaida(stack_top(s)) <= getterSaida(c)) {
+        if(getterSaida(stack_top(s)) <= getterChegada(c)) {
             carro_imprime(stack_top(s));
         } else break;
     }
@@ -85,10 +89,60 @@ int carro_rejeicao(carro *c, queue *q, stack *s) {
     }
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------
+void print_estacionamento(stack *s , queue *q){
+    printf("Pátio 1:\n");
+    print_stack(s);
+    printf("Pátio 2:\n");
+    print_queue(q);
+}
 
 
 
 int main() {
+    int option;
+    stack *e1;
+    queue *e2;
+    char exit , lixo;
+    while (1){
+        option = 0;
+        printf("+-------------------------------------+\n");
+        printf("|     Cadastro do estacionamento      |\n");
+        printf("|                                     |\n");
+        printf("| Selecione uma opção:                |\n");
+        printf("| 1 -> Cadastrar um novo carro        |\n");
+        printf("| 2 -> Ver carros já estacionados     |\n");
+        printf("| 3 -> Fechar programa                |\n");
+        printf("|                                     |\n");
+        printf("| Opção:                              |\n");
+        printf("+-------------------------------------+\n");
+        gotoxy(2,9);
+        scanf("%d" , &option);
+        clear();
+        switch(option){
+            case 1:
+                carro_checkin(e2 , e1);
+                break;
+            case 2:
+                print_estacionamento(e1 , e2);
+                break;
+            case 3:
+                printf("Deseja realmente sair do programa? [y/n]\n");
+                scanf("%c" , &exit);
+                if(exit == 'y'){
+                    erase_queue(e2);
+                    erase_stack(e1);
+                    return 0;
+                }
+                break;
+            default:
+            printf("Opção inválida!\n");
+        }
+        printf("Pressione enter para continuar\n");
+        lixo = getchar();
+        lixo = getchar();
+    }
+    
 
     return 0;
 }
