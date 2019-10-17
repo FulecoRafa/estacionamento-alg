@@ -3,8 +3,10 @@
 
 typedef struct _carro carro;
 
-
-typedef struct _node node;
-
+int placaGetter(carro *c);
+int saidaGetter(carro *c);
+int chegadaGetter(carro *c);
+float descontoGetter(carro *c);
+void carro_imprime(carro *c);
 
 #endif

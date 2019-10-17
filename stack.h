@@ -4,6 +4,8 @@
 #define STACK_H
 
 typedef struct _stack stack;
+
+typedef struct _node node;
 //Defines the stack's structure
 struct _stack{
     node* TOP;
@@ -14,7 +16,7 @@ struct _stack{
 
 stack* create_stack(int max , int verbose);
 
-node *node_create(carro c , int VERBOSE);
+node *node_create(carro *c , int VERBOSE);
 
 void node_erase(node* n);
 
@@ -28,14 +30,14 @@ void erase_stack(stack *s);
 
 node* stack_top(stack *s);
 
-int stack_pile(stack *s , carro c);
+int stack_pile(stack *s , carro *c);
 
-carro stack_unpile(stack *s);
+carro *stack_unpile(stack *s);
 
 int stack_filling(stack *s);
 
 void print_stack(stack *s);
 
-carro item_getter(node* n);
+carro *item_getter(node* n);
 
 #endif

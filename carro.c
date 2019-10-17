@@ -8,9 +8,18 @@ struct _carro {
     float desconto;
 };
 
-// Estrutura do no
-struct _node{
-    carro car;
-    node* next;
-    int VERBOSE;
-};
+int placaGetter(carro *c) {
+    return c->placa;
+}
+
+int chegadaGetter(carro *c) {
+    return c->chegada;
+}
+
+int saidaGetter(carro *c) {
+    return c->saida;
+}
+
+float descontoGetter(carro *c) {
+    return c->desconto;
+}

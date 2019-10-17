@@ -5,8 +5,15 @@
 
 #define ERROR -32000//defines an absurd number for error returns
 
+// Estrutura do no
+struct _node{
+    carro *car;
+    node* next;
+    int VERBOSE;
+};
+
 //Function to create a node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
-node *node_create(carro c , int VERBOSE){
+node *node_create(carro *c , int VERBOSE){
     node *n = (node*) malloc(sizeof(node));
     if(n != NULL){
         n->next = NULL;
@@ -29,7 +36,7 @@ void node_erase(node* n){
 }
 
 
-carro item_getter(node* n){
+carro *item_getter(node* n){
     return (n->car);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -100,7 +107,7 @@ node* queue_HEAD(queue *q){
 }
 
 //Adds items to the queue. 'num' is the item to be added. Returns 1 if operation is successfull and 0 if not.
-int queue_insert(queue *q , carro c){
+int queue_insert(queue *q , carro *c){
     if(full_queue(q)){
         if(q->VERBOSE) printf("[!] Can't pile item :: queue already full [@ queue_pile()]\n");
         return 0;
@@ -116,13 +123,13 @@ int queue_insert(queue *q , carro c){
 }
 
 //Removes the next item on the queue. It returns this item.
-carro queue_next(queue *q){
+carro *queue_next(queue *q){
     if(q == NULL){
         if(q->VERBOSE) printf("[!] Unable to retrive item :: queue is NULL [@ queue_unpile()]\n");
     }else if(empty_queue(q)){
         if(q->VERBOSE) printf("[!] Unable to retrieve item :: queue is empty [@ queue_unpile()]\n");
     }else{
-        carro c = q->HEAD->car;
+        carro *c = q->HEAD->car;
         node* point = q->HEAD;
         q->HEAD = q->HEAD->next;
         point->next = NULL; free(point); point = NULL;
@@ -135,7 +142,7 @@ void print_queue(queue *q){
     node* it = q->HEAD;
     while(it){
         printf("#-----#\n");
-        printf("#--placa: %d--#\n" , it->car.placa);
+        printf("#--placa: %d--#\n" , placaGetter(it->car));
         it=it->next;
     }
     printf("#-----#\n");

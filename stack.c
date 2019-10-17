@@ -5,8 +5,15 @@
 
 #define ERROR -32000//defines an absurd number for error returns
 
+// Estrutura do no
+struct _node{
+    carro *car;
+    node* next;
+    int VERBOSE;
+};
+
 //Function to create a node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
-node *node_create(carro c , int VERBOSE){
+node *node_create(carro *c , int VERBOSE){
     node *n = (node*) malloc(sizeof(node));
     if(n != NULL){
         n->next = NULL;
@@ -28,8 +35,7 @@ void node_erase(node* n){
     if(auxVERBOSE) printf("[:)] Node deleted [@ node_erase()]\n");
 }
 
-
-carro item_getter(node* n){
+carro *item_getter(node* n){
     return (n->car);
 }
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -100,7 +106,7 @@ node* stack_top(stack *s){
 }
 
 //Adds items to the stack. 'num' is the item to be added. Returns 1 if operation is successfull and 0 if not.
-int stack_pile(stack *s , carro c){
+int stack_pile(stack *s , carro *c){
     if(full_stack(s)){
         if(s->VERBOSE) printf("[!] Can't pile item :: Stack already full [@ stack_pile()]\n");
         return 0;
@@ -116,13 +122,13 @@ int stack_pile(stack *s , carro c){
 }
 
 //Removes the next item on the stack. It returns this item.
-carro stack_unpile(stack *s){
+carro *stack_unpile(stack *s){
     if(s == NULL){
         if(s->VERBOSE) printf("[!] Unable to retrive item :: Stack is NULL [@ stack_unpile()]\n");
     }else if(empty_stack(s)){
         if(s->VERBOSE) printf("[!] Unable to retrieve item :: Stack is empty [@ stack_unpile()]\n");
     }else{
-        carro c = s->TOP->car;
+        carro *c = s->TOP->car;
         node* point = s->TOP;
         s->TOP = s->TOP->next;
         point->next = NULL; free(point); point = NULL;
@@ -135,7 +141,7 @@ void print_stack(stack *s){
     node* it = s->TOP;
     while(it){
         printf("#-----#\n");
-        printf("#--placa: %d--#\n" , it->car.placa);
+        printf("#--placa: %d--#\n" , placaGetter(it->car));
         it=it->next;
     }
     printf("#######\n");
