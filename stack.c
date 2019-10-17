@@ -144,6 +144,7 @@ void print_stack(stack *s){
         printf("#--Placa: %d--#\n" , placaGetter(it->car));
         printf("#--Chegada: %02d-#\n" , chegadaGetter(it->car));
         printf("#--Saída: %02d-#\n" , saidaGetter(it->car));
+        printf("#--Valor a pagar: R$%d,00-#\n");
         printf("#--Desconto: %.2f-#\n" , descontoGetter(it->car));
         it=it->next;
     }

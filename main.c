@@ -6,24 +6,25 @@
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x));
 
 // Define o carro e insere, se possível, no estacionamento
-int carro_checkin(queue *q, stack *s) {
-    int placa, chegada, saida;
+int carro_checkin(queue *q, stack *s , int verbose) {
+    int placa, chegada, saida, preco;
     printf("Placa: \n");
     scanf("%d", &placa);
     printf("Chegada: \n");
     scanf("%d", &chegada);
     printf("Horas: \n");
     scanf("%d", &saida);
+    preco = 3*saida;
     saida += chegada;
 
-    carro *c = carro_cria(placa, chegada, saida, 0);
+    carro *c = carro_cria(placa, chegada, saida, preco, 0);
     if(stack_search(s, c) || queue_search(q, c)) {
         printf("Carro já estacionado!\n");
         return 0;
     }
 
     carro_checkout(c , q , s);
-    int rejeicao = carro_rejeicao(c , q , s);
+    int rejeicao = carro_rejeicao(c , q , s , verbose);
     if(rejeicao == 1) {
         stack_pile(s, c);
         return 1;
@@ -31,7 +32,7 @@ int carro_checkin(queue *q, stack *s) {
         queue_insert(q, c);
         return 1;
     }
-
+    printf("Carro rejeitado!\n");
     return 0;
 
 }
@@ -72,22 +73,22 @@ int carro_disponibilidade(carro *c, queue *q, stack *s) {
 }
 
 // Retorna 0 se o carro for rejeitado, caso contrario, retorna o pátio a ser colocado.
-int carro_rejeicao(carro *c, queue *q, stack *s) {
+int carro_rejeicao(carro *c, queue *q, stack *s , int verbose) {
     int disp = carro_disponibilidade(c , q , s);
     if (chegadaGetter(c) < 8){
-        printf("[!]Carro com horário de chegada fora do horário de funcionamento.\n");
+        if(verbose) printf("[!]Carro com horário de chegada fora do horário de funcionamento.\n");
         return 0;
     }else if(saidaGetter(c) > 22){
-        printf("[!]Carro com horário de saída fora do horário de funcionamento.\n");
+        if(verbose) printf("[!]Carro com horário de saída fora do horário de funcionamento.\n");
         return 0;
     }else if(full_queue(q) && full_stack(s)){
-        printf("[!]Estacionamento lotado!\n");
+        if(verbose) printf("[!]Estacionamento lotado!\n");
         return 0;
     }else if(search_placa(c)){
-        printf("[!]Carro já está no estacionamento\n");
+        if(verbose) printf("[!]Carro já está no estacionamento\n");
         return 0;
     }else if(disp == 0){
-        printf("[!]Carro inválido: horário de saída não compatível com carros já estacionados\n");
+        if(verbose) printf("[!]Carro inválido: horário de saída não compatível com carros já estacionados\n");
         return 0;
     }else{
         return (disp);
@@ -129,7 +130,7 @@ int main() {
         clear();
         switch(option){
             case 1:
-                carro_checkin(e2 , e1);
+                carro_checkin(e2 , e1 , verbose);
                 break;
             case 2:
                 print_estacionamento(e1 , e2);

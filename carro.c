@@ -5,14 +5,16 @@ struct _carro {
     int placa;
     int chegada;
     int saida;
+    int preco;
     float desconto;
 };
 
-carro *carro_cria(int placa, int chegada, int saida, float desconto) {
+carro *carro_cria(int placa, int chegada, int saida, int preco, float desconto) {
     carro *c = (carro*) malloc(sizeof(carro));
     c->placa = placa;
     c->chegada = chegada;
     c->saida = saida;
+    c->preco = preco;
     c->desconto = desconto;
     return c;
 }
@@ -27,6 +29,10 @@ int chegadaGetter(carro *c) {
 
 int saidaGetter(carro *c) {
     return c->saida;
+}
+
+int precoGetter(carro *c){
+    return c->preco;
 }
 
 float descontoGetter(carro *c) {
