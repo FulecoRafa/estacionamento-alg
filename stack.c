@@ -150,3 +150,15 @@ void print_stack(stack *s){
     printf("#######\n");
 
 }
+
+// Search for a car in the stack, return 1 if true and 0 if false
+int stack_search(stack *s, carro *c) {
+    node *it = s->TOP;
+    while(it) {
+        if(it == placaGetter(c)) {
+            return 1;
+        }
+        it = it->next;
+    }
+    return 0;
+}

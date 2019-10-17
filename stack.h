@@ -40,4 +40,6 @@ void print_stack(stack *s);
 
 carro *item_getter(node* n);
 
+int stack_search(stack *s, carro *c);
+
 #endif

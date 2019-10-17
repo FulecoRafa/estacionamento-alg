@@ -22,5 +22,6 @@ node* queue_TAIL(queue *q);
 int queue_insert(queue *q , carro *c);
 carro *queue_next(queue *q);
 void print_queue(queue *q);
+int queue_search(queue *q, carro *c);
 
 #endif

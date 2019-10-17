@@ -8,5 +8,6 @@ int saidaGetter(carro *c);
 int chegadaGetter(carro *c);
 float descontoGetter(carro *c);
 void carro_imprime(carro *c);
+carro *carro_cria(int placa, int chegada, int saida, float desconto)
 
 #endif

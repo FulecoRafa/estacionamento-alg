@@ -167,3 +167,15 @@ void print_queue(queue *q){
     printf("#-----#\n");
 
 }
+
+// Search for a car in the queue, return 1 if true and 0 if false
+int queue_search(queue *q, carro *c) {
+    node *it = q->HEAD;
+    while(it) {
+        if(it == placaGetter(c)) {
+            return 1;
+        }
+        it = it->next;
+    }
+    return 0;
+}

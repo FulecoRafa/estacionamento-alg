@@ -16,7 +16,12 @@ int carro_checkin(queue *q, stack *s) {
     scanf("%d", &saida);
     saida += chegada;
 
-    carro *c = carro_cria();
+    carro *c = carro_cria(placa, chegada, saida, 0);
+    if(stack_search(s, c) || queue_search(q, c)) {
+        printf("Carro já estacionado!\n");
+        return 0;
+    }
+
     carro_checkout(c , q , s);
     int rejeicao = carro_rejeicao(c , q , s);
     if(rejeicao == 1) {
@@ -100,9 +105,12 @@ void print_estacionamento(stack *s , queue *q){
 
 
 int main() {
+    printf("Opçoes de verbose?\n[1/0]");
+    int verbose;
+    scanf("%d", &verbose);
     int option;
-    stack *e1;
-    queue *e2;
+    stack *e1 = create_stack(5, verbose);
+    queue *e2 = create_queue(10, verbose);
     char exit , lixo;
     while (1){
         option = 0;
