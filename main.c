@@ -62,11 +62,27 @@ int carro_disponibilidade(carro *c, queue *q, stack *s) {
     return 0;
 }
 
-// Retorna 1 se o carro for rejeitado, caso contrario, retorna 0
+// Retorna 0 se o carro for rejeitado, caso contrario, retorna o pátio a ser colocado.
 int carro_rejeicao(carro *c, queue *q, stack *s) {
-    if ((chegadaGetter(c) < 8 || saidaGetter(c) > 22) || (full_queue(q) || full_stack(s)) || carro_disponibilidade(c, q, s) == 0)
-        return 1;
-    return 0;
+    int disp = carro_disponibilidade(c , q , s);
+    if (chegadaGetter(c) < 8){
+        printf("[!]Carro com horário de chegada fora do horário de funcionamento.\n");
+        return 0;
+    }else if(saidaGetter(c) > 22){
+        printf("[!]Carro com horário de saída fora do horário de funcionamento.\n");
+        return 0;
+    }else if(full_queue(q) && full_stack(s)){
+        printf("[!]Estacionamento lotado!\n");
+        return 0;
+    }else if(search_placa(c)){
+        printf("[!]Carro já está no estacionamento\n");
+        return 0;
+    }else if(disp == 0){
+        printf("[!]Carro inválido: horário de saída não compatível com carros já estacionados\n");
+        return 0;
+    }else{
+        return (disp);
+    }
 }
 
 
