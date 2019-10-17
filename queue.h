@@ -6,14 +6,6 @@
 typedef struct _queue queue;
 
 typedef struct _node node;
-//Defines the structure for the queue
-struct _queue{
-    node* HEAD;
-    node* TAIL;
-    int SIZE;
-    int FILL;
-    int VERBOSE;
-};
 
 
 node *node_create(carro *c , int VERBOSE);
@@ -26,6 +18,7 @@ int queue_filling(queue *q);
 int full_queue(queue *q);
 void erase_queue(queue *q);
 node* queue_HEAD(queue *q);
+node* queue_TAIL(queue *q);
 int queue_insert(queue *q , carro *c);
 carro *queue_next(queue *q);
 void print_queue(queue *q);

@@ -40,6 +40,14 @@ carro *item_getter(node* n){
     return (n->car);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
+//Defines the structure for the queue
+struct _queue{
+    node* HEAD;
+    node* TAIL;
+    int SIZE;
+    int FILL;
+    int VERBOSE;
+};
 
 //Creates the queue. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the nodes).
 queue* create_queue(int max , int VERBOSE){
@@ -101,6 +109,14 @@ void erase_queue(queue *q){
 node* queue_HEAD(queue *q){
     if(q != NULL){
         return q->HEAD;
+    }
+    if(q->VERBOSE) printf("[!] Unable to retrive item :: queue is NULL [@ queue_HEAD()]\n");
+    return NULL;
+}
+
+node* queue_TAIL(queue *q){
+    if(q != NULL){
+        return q->TAIL;
     }
     if(q->VERBOSE) printf("[!] Unable to retrive item :: queue is NULL [@ queue_HEAD()]\n");
     return NULL;
