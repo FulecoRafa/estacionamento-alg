@@ -1,9 +1,30 @@
 #include "stack.h"
 #include "queue.h"
+#include <time.h>
 
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x));
+
+int sorteio(stack *s , queue *q){
+    int max = queue_filling(q) + stack_filling(s);
+    srand(time(NULL));
+    int sort = rand() % 50;
+    int i = 0;
+    for(int j = 0 ; j < sort ; j++){
+        i++;
+        if(i > max){
+            i = 0;
+        }
+    }
+    if(i > stack_filling(s)){
+        carro *c =  itemGetter(travel_queue(q , (i - stack_filling(s))));
+        applyDiscount(c , 0.1 * (precoGetter(c)));
+    }else{
+        carro *c =  itemGetter(travel_stack(s , i));
+        applyDiscount(c , 0.1 * precoGetter(c));
+    }
+}
 
 // Define o carro e insere, se possível, no estacionamento
 int carro_checkin(queue *q, stack *s , int verbose) {
@@ -16,7 +37,7 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     scanf("%d", &saida);
     preco = 3*saida;
     saida += chegada;
-    //gerar desconto
+    sorteio(s , q);
     carro *c = carro_cria(placa, chegada, saida, preco, 0);
     if(stack_search(s, c) || queue_search(q, c)) {
         printf("Carro já estacionado!\n");

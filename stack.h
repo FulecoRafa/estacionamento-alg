@@ -36,4 +36,7 @@ carro *item_getter(node* n);
 
 int stack_search(stack *s, carro *c);
 
+
+node *travel_stack(stack *s , int index);
+
 #endif

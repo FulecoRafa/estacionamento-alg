@@ -171,3 +171,12 @@ int stack_search(stack *s, carro *c) {
     }
     return 0;
 }
+
+node *travel_stack(stack *s , int index){
+    node *it;
+    it = s->TOP;
+    for(int i = 1 ; i <= index ; i++){
+        it = it->next;
+    }
+    return it;
+}

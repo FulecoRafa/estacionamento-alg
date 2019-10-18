@@ -181,3 +181,12 @@ int queue_search(queue *q, carro *c) {
     }
     return 0;
 }
+
+node *travel_queue(queue *q , int index){
+    node *it;
+    it = q->HEAD;
+    for(int i = 1 ; i <= index ; i++){
+        it = it->next;
+    }
+    return it;
+}
