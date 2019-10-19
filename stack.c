@@ -6,49 +6,49 @@
 #define ERROR -32000//defines an absurd number for error returns
 
 // Estrutura do no
-struct _node{
+struct _s_node{
     carro *car;
-    node* next;
+    s_node* next;
     int VERBOSE;
 };
 
-//Function to create a node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
-node *node_create(carro *c , int VERBOSE){
-    node *n = (node*) malloc(sizeof(node));
+//Function to create a s_node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
+s_node *s_node_create(carro *c , int VERBOSE){
+    s_node *n = (s_node*) malloc(sizeof(s_node));
     if(n != NULL){
         n->next = NULL;
         n->car = c;
         n->VERBOSE = VERBOSE;
-        if(VERBOSE) printf("[:)] Node created [@ node_create()]\n");
+        if(VERBOSE) printf("[:)] s_Node created [@ s_node_create()]\n");
         return n;
     }else{
-        if(VERBOSE) printf("[!] Error creating node [@ node_create()]\n");
+        if(VERBOSE) printf("[!] Error creating s_node [@ s_node_create()]\n");
         return NULL;
     }
 }
 
-//Erases the node especified
-void node_erase(node* n){
+//Erases the s_node especified
+void s_node_erase(s_node* n){
     n->next = NULL;
     int auxVERBOSE = n->VERBOSE;
     free(n);
-    if(auxVERBOSE) printf("[:)] Node deleted [@ node_erase()]\n");
+    if(auxVERBOSE) printf("[:)] s_Node deleted [@ s_node_erase()]\n");
 }
 
-carro *item_getter(node* n){
+carro *s_item_getter(s_node* n){
     return (n->car);
 }
 //-------------------------------------------------------------------------------------------------------------------------------
 
 //Defines the stack's structure
 struct _stack{
-    node* TOP;
+    s_node* TOP;
     int SIZE;
     int FILL;
     int VERBOSE;
 };
 
-//Creates the stack. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the nodes).
+//Creates the stack. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the s_nodes).
 stack* create_stack(int max , int VERBOSE){
     stack* new_stack = (stack*) malloc (sizeof(stack));
     if(new_stack == NULL){
@@ -90,13 +90,13 @@ int full_stack(stack *s){
 
 //Completely erases the stack and it's items
 void erase_stack(stack *s){
-    node *it;
+    s_node *it;
     int auxVERBOSE=s->VERBOSE;
     if(s != NULL && s->FILL !=0){        
         while(s->TOP){
             it = s->TOP;
             s->TOP = s->TOP->next;
-            node_erase(it);
+            s_node_erase(it);
         }
     }
     free(s);
@@ -104,7 +104,7 @@ void erase_stack(stack *s){
 }
 
 //Returns the next top item in the stack
-node* stack_top(stack *s){
+s_node* stack_top(stack *s){
     if(s != NULL){
         return s->TOP;
     }
@@ -118,10 +118,10 @@ int stack_pile(stack *s , carro *c){
         if(s->VERBOSE) printf("[!] Can't pile item :: Stack already full [@ stack_pile()]\n");
         return 0;
     }else{
-        node *new_node = (node*) malloc(sizeof(node));
-        new_node = node_create(c , s->VERBOSE);
-        new_node->next = s->TOP;
-        s->TOP = new_node;
+        s_node *new_s_node = (s_node*) malloc(sizeof(s_node));
+        new_s_node = s_node_create(c , s->VERBOSE);
+        new_s_node->next = s->TOP;
+        s->TOP = new_s_node;
         s->FILL++;
         if(s->VERBOSE) printf("[:)] Item piled on stack [@ stack_pile]\n");
         return 1;
@@ -136,7 +136,7 @@ carro *stack_unpile(stack *s){
         if(s->VERBOSE) printf("[!] Unable to retrieve item :: Stack is empty [@ stack_unpile()]\n");
     }else{
         carro *c = s->TOP->car;
-        node* point = s->TOP;
+        s_node* point = s->TOP;
         s->TOP = s->TOP->next;
         point->next = NULL; free(point); point = NULL;
         s->FILL--;
@@ -145,7 +145,7 @@ carro *stack_unpile(stack *s){
 }
 
 void print_stack(stack *s){
-    node* it = s->TOP;
+    s_node* it = s->TOP;
     while(it){
         printf("#-----#\n");
         printf("#--Placa: %d--#\n" , placaGetter(it->car));
@@ -162,9 +162,9 @@ void print_stack(stack *s){
 
 // Search for a car in the stack, return 1 if true and 0 if false
 int stack_search(stack *s, carro *c) {
-    node *it = s->TOP;
+    s_node *it = s->TOP;
     while(it) {
-        if(it == placaGetter(c)) {
+        if(placaGetter(it->car) == placaGetter(c)) {
             return 1;
         }
         it = it->next;
@@ -172,8 +172,8 @@ int stack_search(stack *s, carro *c) {
     return 0;
 }
 
-node *travel_stack(stack *s , int index){
-    node *it;
+s_node *travel_stack(stack *s , int index){
+    s_node *it;
     it = s->TOP;
     for(int i = 1 ; i <= index ; i++){
         it = it->next;

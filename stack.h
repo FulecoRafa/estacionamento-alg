@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "carro.h"
 
 #ifndef STACK_H
@@ -5,14 +7,14 @@
 
 typedef struct _stack stack;
 
-typedef struct _node node;
+typedef struct _s_node s_node;
 
 
 stack* create_stack(int max , int verbose);
 
-node *node_create(carro *c , int VERBOSE);
+s_node *s_node_create(carro *c , int VERBOSE);
 
-void node_erase(node* n);
+void s_node_erase(s_node* n);
 
 int empty_stack(stack *s);
 
@@ -22,7 +24,7 @@ int full_stack(stack *s);
 
 void erase_stack(stack *s);
 
-node* stack_top(stack *s);
+s_node* stack_top(stack *s);
 
 int stack_pile(stack *s , carro *c);
 
@@ -32,11 +34,11 @@ int stack_filling(stack *s);
 
 void print_stack(stack *s);
 
-carro *item_getter(node* n);
+carro *s_item_getter(s_node* n);
 
 int stack_search(stack *s, carro *c);
 
 
-node *travel_stack(stack *s , int index);
+s_node *travel_stack(stack *s , int index);
 
 #endif

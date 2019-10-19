@@ -6,50 +6,50 @@
 #define ERROR -32000//defines an absurd number for error returns
 
 // Estrutura do no
-struct _node{
+struct _q_node{
     carro *car;
-    node* next;
+    q_node* next;
     int VERBOSE;
 };
 
-//Function to create a node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
-node *node_create(carro *c , int VERBOSE){
-    node *n = (node*) malloc(sizeof(node));
+//Function to create a q_node. 'num' is the item to be stored and 'VERBOSE' is to set if the process messages will be printed. Set it 1 for printing and 0 for non-printing
+q_node *q_node_create(carro *c , int VERBOSE){
+    q_node *n = (q_node*) malloc(sizeof(q_node));
     if(n != NULL){
         n->next = NULL;
         n->car = c;
         n->VERBOSE = VERBOSE;
-        if(VERBOSE) printf("[:)] Node created [@ node_create()]\n");
+        if(VERBOSE) printf("[:)] q_Node created [@ q_node_create()]\n");
         return n;
     }else{
-        if(VERBOSE) printf("[!] Error creating node [@ node_create()]\n");
+        if(VERBOSE) printf("[!] Error creating q_node [@ q_node_create()]\n");
         return NULL;
     }
 }
 
-//Erases the node especified
-void node_erase(node* n){
+//Erases the q_node especified
+void q_node_erase(q_node* n){
     n->next = NULL;
     int auxVERBOSE = n->VERBOSE;
     free(n);
-    if(auxVERBOSE) printf("[:)] Node deleted [@ node_erase()]\n");
+    if(auxVERBOSE) printf("[:)] q_Node deleted [@ q_node_erase()]\n");
 }
 
 
-carro *item_getter(node* n){
+carro *q_item_getter(q_node* n){
     return (n->car);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 //Defines the structure for the queue
 struct _queue{
-    node* HEAD;
-    node* TAIL;
+    q_node* HEAD;
+    q_node* TAIL;
     int SIZE;
     int FILL;
     int VERBOSE;
 };
 
-//Creates the queue. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the nodes).
+//Creates the queue. 'max' defines the maximum number of items allowed to be stored and 'VERBOSE' defines if process messages will be shown (just like in the q_nodes).
 queue* create_queue(int max , int VERBOSE){
     queue* new_queue = (queue*) malloc (sizeof(queue));
     if(new_queue == NULL){
@@ -92,13 +92,13 @@ int full_queue(queue *q){
 
 //Completely erases the queue and it's items
 void erase_queue(queue *q){
-    node *it;
+    q_node *it;
     int auxVERBOSE=q->VERBOSE;
     if(q != NULL && q->FILL !=0){        
         while(q->HEAD){
             it = q->HEAD;
             q->HEAD = q->HEAD->next;
-            node_erase(it);
+            q_node_erase(it);
         }
     }
     free(q);
@@ -106,7 +106,7 @@ void erase_queue(queue *q){
 }
 
 //Returns the next HEAD item in the queue
-node* queue_HEAD(queue *q){
+q_node* queue_HEAD(queue *q){
     if(q != NULL){
         return q->HEAD;
     }
@@ -114,7 +114,7 @@ node* queue_HEAD(queue *q){
     return NULL;
 }
 
-node* queue_TAIL(queue *q){
+q_node* queue_TAIL(queue *q){
     if(q != NULL){
         return q->TAIL;
     }
@@ -128,18 +128,18 @@ int queue_insert(queue *q , carro *c){
         if(q->VERBOSE) printf("[!] Can't pile item :: queue already full [@ queue_pile()]\n");
         return 0;
     }if(empty_queue(q)){
-        node *new_node = (node*) malloc(sizeof(node));
-        new_node = node_create(c , q->VERBOSE);
-        q->HEAD = new_node;
-        q->TAIL = new_node;
+        q_node *new_q_node = (q_node*) malloc(sizeof(q_node));
+        new_q_node = q_node_create(c , q->VERBOSE);
+        q->HEAD = new_q_node;
+        q->TAIL = new_q_node;
         q->FILL++;
         if(q->VERBOSE) printf("[:)] Item piled on queue [@ queue_pile]\n");
         return 1;
     }else{
-        node *new_node = (node*) malloc(sizeof(node));
-        new_node = node_create(c , q->VERBOSE);
-        q->TAIL->next = new_node;
-        q->TAIL = new_node;
+        q_node *new_q_node = (q_node*) malloc(sizeof(q_node));
+        new_q_node = q_node_create(c , q->VERBOSE);
+        q->TAIL->next = new_q_node;
+        q->TAIL = new_q_node;
         q->FILL++;
         if(q->VERBOSE) printf("[:)] Item piled on queue [@ queue_pile]\n");
         return 1;
@@ -154,7 +154,7 @@ carro *queue_next(queue *q){
         if(q->VERBOSE) printf("[!] Unable to retrieve item :: queue is empty [@ queue_unpile()]\n");
     }else{
         carro *c = q->HEAD->car;
-        node* point = q->HEAD;
+        q_node* point = q->HEAD;
         q->HEAD = q->HEAD->next;
         point->next = NULL; free(point); point = NULL;
         q->FILL--;
@@ -163,7 +163,7 @@ carro *queue_next(queue *q){
 }
 
 void print_queue(queue *q){
-    node* it = q->HEAD;
+    q_node* it = q->HEAD;
     while(it){
         printf("#-----#\n");
         printf("#--Placa: %d--#\n" , placaGetter(it->car));
@@ -180,9 +180,9 @@ void print_queue(queue *q){
 
 // Search for a car in the queue, return 1 if true and 0 if false
 int queue_search(queue *q, carro *c) {
-    node *it = q->HEAD;
+    q_node *it = q->HEAD;
     while(it) {
-        if(it == placaGetter(c)) {
+        if(placaGetter(it->car) == placaGetter(c)) {
             return 1;
         }
         it = it->next;
@@ -190,8 +190,8 @@ int queue_search(queue *q, carro *c) {
     return 0;
 }
 
-node *travel_queue(queue *q , int index){
-    node *it;
+q_node *travel_queue(queue *q , int index){
+    q_node *it;
     it = q->HEAD;
     for(int i = 1 ; i <= index ; i++){
         it = it->next;

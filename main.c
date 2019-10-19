@@ -1,10 +1,71 @@
 #include "stack.h"
 #include "queue.h"
+#include "carro.h"
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 #define clear() printf("\033[H\033[J")
 #define gotoxy(x,y) printf("\033[%d;%dH", (y), (x));
+
+// Retorna em qual patio o carro deve parar, se possivel,
+// 0-> nao foi possivel inserir, 1 -> insere na stack, 2 -> insere na queue
+int carro_disponibilidade(carro *c, queue *q, stack *s) {
+    if (empty_queue(q) == 1 && empty_stack(s) == 1) return 1;
+
+    if (empty_queue(q) == 0 && empty_stack(s) == 1) return 2;
+
+    if (empty_queue(q) == 1 && empty_stack(s) == 0) return 1;
+
+    if ((empty_queue(q) == 0 && empty_stack(s) == 0) &&
+        (full_queue(q) == 0 || full_stack(s) == 0)) {
+            
+            if(saidaGetter(c) <= saidaGetter(s_item_getter(stack_top(s)))) return 1;
+
+            if(saidaGetter(c) >= saidaGetter(q_item_getter(queue_TAIL(q)))) return 2;
+    }
+
+    return 0;
+}
+
+// Retorna 0 se o carro for rejeitado, caso contrario, retorna o pátio a ser colocado.
+int carro_rejeicao(carro *c, queue *q, stack *s , int verbose) {
+    int disp = carro_disponibilidade(c , q , s);
+    if (chegadaGetter(c) < 8){
+        if(verbose) printf("[!]Carro com horário de chegada fora do horário de funcionamento.\n");
+        return 0;
+    }else if(saidaGetter(c) > 22){
+        if(verbose) printf("[!]Carro com horário de saída fora do horário de funcionamento.\n");
+        return 0;
+    }else if(full_queue(q) && full_stack(s)){
+        if(verbose) printf("[!]Estacionamento lotado!\n");
+        return 0;
+    }else if(queue_search( q , c ) || stack_search( s , c )){
+        if(verbose) printf("[!]Carro já está no estacionamento\n");
+        return 0;
+    }else if(disp == 0){
+        if(verbose) printf("[!]Carro inválido: horário de saída não compatível com carros já estacionados\n");
+        return 0;
+    }else{
+        return (disp);
+    }
+}
+
+// Imprime os dados e remove os carros expirados em relacao ao novo carro
+int carro_checkout(carro *c, queue *q, stack *s) {
+    while(1) {
+        if(saidaGetter(q_item_getter(queue_HEAD(q))) <= chegadaGetter(c)) {
+            carro_imprime(queue_next(q));
+        } else break;
+    }
+
+    while(1) {
+        if(saidaGetter(s_item_getter(stack_top(s))) <= chegadaGetter(c)) {
+            carro_imprime(s_item_getter(stack_top(s)));
+        } else break;
+    }
+}
 
 int sorteio(stack *s , queue *q){
     int max = queue_filling(q) + stack_filling(s);
@@ -18,11 +79,11 @@ int sorteio(stack *s , queue *q){
         }
     }
     if(i > stack_filling(s)){
-        carro *c =  itemGetter(travel_queue(q , (i - stack_filling(s))));
+        carro *c =  q_item_getter(travel_queue(q , (i - stack_filling(s))));
         applyDiscount(c , 0.1 * (precoGetter(c)));
     }else{
-        carro *c =  itemGetter(travel_stack(s , i));
-        applyDiscount(c , 0.1 * precoGetter(c));
+        carro *c =  s_item_getter(travel_stack(s , i));
+        applyDiscount(c , 0.1 * (precoGetter(c)));
     }
 }
 
@@ -56,64 +117,6 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     printf("Carro rejeitado!\n");
     return 0;
 
-}
-
-// Imprime os dados e remove os carros expirados em relacao ao novo carro
-int carro_checkout(carro *c, queue *q, stack *s) {
-    while(1) {
-        if(getterSaida(queue_HEAD(q)) <= getterChegada(c)) {
-            carro_imprime(queue_next(q));
-        } else break;
-    }
-
-    while(1) {
-        if(getterSaida(stack_top(s)) <= getterChegada(c)) {
-            carro_imprime(stack_top(s));
-        } else break;
-    }
-}
-
-// Retorna em qual patio o carro deve parar, se possivel,
-// 0-> nao foi possivel inserir, 1 -> insere na stack, 2 -> insere na queue
-int carro_disponibilidade(carro *c, queue *q, stack *s) {
-    if (empty_queue(q) == 1 && empty_stack(s) == 1) return 1;
-
-    if (empty_queue(q) == 0 && empty_stack(s) == 1) return 2;
-
-    if (empty_queue(q) == 1 && empty_stack(s) == 0) return 1;
-
-    if ((empty_queue(q) == 0 && empty_stack(s) == 0) &&
-        (full_queue(q) == 0 || full_stack(s) == 0)) {
-            
-            if(saidaGetter(c) <= saidaGetter(item_getter(stack_top(s)))) return 1;
-
-            if(saidaGetter(c) >= saidaGetter(item_getter(queue_TAIL(s)))) return 2;
-    }
-
-    return 0;
-}
-
-// Retorna 0 se o carro for rejeitado, caso contrario, retorna o pátio a ser colocado.
-int carro_rejeicao(carro *c, queue *q, stack *s , int verbose) {
-    int disp = carro_disponibilidade(c , q , s);
-    if (chegadaGetter(c) < 8){
-        if(verbose) printf("[!]Carro com horário de chegada fora do horário de funcionamento.\n");
-        return 0;
-    }else if(saidaGetter(c) > 22){
-        if(verbose) printf("[!]Carro com horário de saída fora do horário de funcionamento.\n");
-        return 0;
-    }else if(full_queue(q) && full_stack(s)){
-        if(verbose) printf("[!]Estacionamento lotado!\n");
-        return 0;
-    }else if(search_placa(c)){
-        if(verbose) printf("[!]Carro já está no estacionamento\n");
-        return 0;
-    }else if(disp == 0){
-        if(verbose) printf("[!]Carro inválido: horário de saída não compatível com carros já estacionados\n");
-        return 0;
-    }else{
-        return (disp);
-    }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
