@@ -50,24 +50,21 @@ int carro_rejeicao(carro *c, queue *q, stack *s , int verbose) {
 
 // Imprime os dados e remove os carros expirados em relacao ao novo carro
 int carro_checkout(carro *c, queue *q, stack *s) {
-    if(!empty_queue(q)) {
-        while(1) {
-            if(saidaGetter(q_item_getter(queue_HEAD(q))) <= chegadaGetter(c) && !empty_queue(q)) {
-                carro_imprime(queue_next(q));
-            } else break;
-        }
+    while(!empty_queue(q)) {
+        if(saidaGetter(q_item_getter(queue_HEAD(q))) <= chegadaGetter(c)) {
+            carro_imprime(queue_next(q));
+        } else break;
+        
     }
-    if(!empty_stack(s)){
-        while(1) {
-            if(saidaGetter(s_item_getter(stack_top(s))) <= chegadaGetter(c) && !empty_stack(s)) {
-                carro_imprime(stack_unpile(s));
-            } else break;
-        }
+    while(!empty_stack(s)){
+        if(saidaGetter(s_item_getter(stack_top(s))) <= chegadaGetter(c)) {
+            carro_imprime(stack_unpile(s));
+        } else break;
+        
     }
 }
 
 void sorteio(stack *s , queue *q){
-    int max = (queue_filling(q) + stack_filling(s));
     printf("%d" , max);
     if(max > 3){
         printf("%d\n" , max);
@@ -163,11 +160,11 @@ int main() {
             case 3:
                 printf("Deseja realmente sair do programa? [y/n]\n");
                 fflush(stdin);
-                scanf("%c" , &exit);
+                scanf(" %c" , &exit);
                 if(exit == 'y'){
                     erase_queue(e2);
                     erase_stack(e1);
-                    return 0;
+                    return (0);
                 }
                 break;
             default:

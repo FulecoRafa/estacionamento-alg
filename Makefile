@@ -1,6 +1,7 @@
 all: main
 
-debug: clear all run
+debug: clear all
+	gdb main
 
 clear:
 	rm *.o
