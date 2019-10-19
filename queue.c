@@ -127,6 +127,14 @@ int queue_insert(queue *q , carro *c){
     if(full_queue(q)){
         if(q->VERBOSE) printf("[!] Can't pile item :: queue already full [@ queue_pile()]\n");
         return 0;
+    }if(empty_queue(q)){
+        node *new_node = (node*) malloc(sizeof(node));
+        new_node = node_create(c , q->VERBOSE);
+        q->HEAD = new_node;
+        q->TAIL = new_node;
+        q->FILL++;
+        if(q->VERBOSE) printf("[:)] Item piled on queue [@ queue_pile]\n");
+        return 1;
     }else{
         node *new_node = (node*) malloc(sizeof(node));
         new_node = node_create(c , q->VERBOSE);
