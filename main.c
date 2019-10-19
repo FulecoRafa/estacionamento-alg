@@ -5,18 +5,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-#define clear() printf("\033[H\033[J")
-#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x));
-
 // Retorna em qual patio o carro deve parar, se possivel,
 // 0-> nao foi possivel inserir, 1 -> insere na stack, 2 -> insere na queue
 int carro_disponibilidade(carro *c, queue *q, stack *s) {
     if (empty_queue(q) == 1 && empty_stack(s) == 1) return 1;
 
-    if (empty_queue(q) == 0 && empty_stack(s) == 1) return 2;
+    if (empty_queue(q) == 0 && empty_stack(s) == 1) return 1;
 
-    if (empty_queue(q) == 1 && empty_stack(s) == 0) return 1;
+    if (empty_queue(q) == 1 && empty_stack(s) == 0) return 2;
 
     if ((empty_queue(q) == 0 && empty_stack(s) == 0) &&
         (full_queue(q) == 0 || full_stack(s) == 0)) {
@@ -54,36 +50,44 @@ int carro_rejeicao(carro *c, queue *q, stack *s , int verbose) {
 
 // Imprime os dados e remove os carros expirados em relacao ao novo carro
 int carro_checkout(carro *c, queue *q, stack *s) {
-    while(1) {
-        if(saidaGetter(q_item_getter(queue_HEAD(q))) <= chegadaGetter(c)) {
-            carro_imprime(queue_next(q));
-        } else break;
+    if(!empty_queue(q)) {
+        while(1) {
+            if(saidaGetter(q_item_getter(queue_HEAD(q))) <= chegadaGetter(c) && !empty_queue(q)) {
+                carro_imprime(queue_next(q));
+            } else break;
+        }
     }
-
-    while(1) {
-        if(saidaGetter(s_item_getter(stack_top(s))) <= chegadaGetter(c)) {
-            carro_imprime(s_item_getter(stack_top(s)));
-        } else break;
+    if(!empty_stack(s)){
+        while(1) {
+            if(saidaGetter(s_item_getter(stack_top(s))) <= chegadaGetter(c) && !empty_stack(s)) {
+                carro_imprime(stack_unpile(s));
+            } else break;
+        }
     }
 }
 
-int sorteio(stack *s , queue *q){
-    int max = queue_filling(q) + stack_filling(s);
-    srand(time(NULL));
-    int sort = rand() % 50;
-    int i = 0;
-    for(int j = 0 ; j < sort ; j++){
-        i++;
-        if(i > max){
-            i = 0;
+void sorteio(stack *s , queue *q){
+    int max = (queue_filling(q) + stack_filling(s));
+    printf("%d" , max);
+    if(max > 3){
+        printf("%d\n" , max);
+        scanf("%d" , &max);
+        srand(time(NULL));
+        int sort = rand() % 50;
+        int i = 0;
+        for(int j = 0 ; j < sort ; j++){
+            i++;
+            if(i > max){
+                i = 0;
+            }
         }
-    }
-    if(i > stack_filling(s)){
-        carro *c =  q_item_getter(travel_queue(q , (i - stack_filling(s))));
-        applyDiscount(c , 0.1 * (precoGetter(c)));
-    }else{
-        carro *c =  s_item_getter(travel_stack(s , i));
-        applyDiscount(c , 0.1 * (precoGetter(c)));
+        if(i > stack_filling(s)){
+            carro *c =  q_item_getter(travel_queue(q , (i - stack_filling(s))));
+            applyDiscount(c , 0.1 * (precoGetter(c)));
+        }else{
+            carro *c =  s_item_getter(travel_stack(s , i));
+            applyDiscount(c , 0.1 * (precoGetter(c)));
+        }
     }
 }
 
@@ -95,7 +99,7 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     printf("Chegada: \n");
     scanf("%d", &chegada);
     printf("Horas: \n");
-    scanf("%d", &saida);
+    scanf(" %d", &saida);
     preco = 3*saida;
     saida += chegada;
     sorteio(s , q);
@@ -147,11 +151,8 @@ int main() {
         printf("| 2 -> Ver carros já estacionados     |\n");
         printf("| 3 -> Fechar programa                |\n");
         printf("|                                     |\n");
-        printf("| Opção:                              |\n");
         printf("+-------------------------------------+\n");
-        gotoxy(2,9);
         scanf("%d" , &option);
-        clear();
         switch(option){
             case 1:
                 carro_checkin(e2 , e1 , verbose);
@@ -161,6 +162,7 @@ int main() {
                 break;
             case 3:
                 printf("Deseja realmente sair do programa? [y/n]\n");
+                fflush(stdin);
                 scanf("%c" , &exit);
                 if(exit == 'y'){
                     erase_queue(e2);
