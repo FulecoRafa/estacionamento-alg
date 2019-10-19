@@ -169,7 +169,7 @@ void print_queue(queue *q){
         printf("#--Placa: %d--#\n" , placaGetter(it->car));
         printf("#--Chegada: %02d-#\n" , chegadaGetter(it->car));
         printf("#--Saída: %02d-#\n" , saidaGetter(it->car));
-        printf("#--Valor a pagar: R$%d,00-#\n" , precoGetter(it->car));
+        printf("#--Valor a pagar: R$%d.00-#\n" , precoGetter(it->car));
         printf("#--Desconto: %.2f-#\n" , descontoGetter(it->car));
         printf("#--Valor: %.2f-#\n" , ((float)(precoGetter(it->car))) - descontoGetter(it->car));
         it=it->next;

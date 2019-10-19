@@ -65,20 +65,18 @@ int carro_checkout(carro *c, queue *q, stack *s) {
 }
 
 void sorteio(stack *s , queue *q){
-    printf("%d" , max);
+    int max = (queue_filling(q) + stack_filling(s));
     if(max > 3){
-        printf("%d\n" , max);
-        scanf("%d" , &max);
         srand(time(NULL));
         int sort = rand() % 50;
         int i = 0;
         for(int j = 0 ; j < sort ; j++){
             i++;
-            if(i > max){
+            if(i >= max){
                 i = 0;
             }
         }
-        if(i > stack_filling(s)){
+        if(i >= stack_filling(s)){
             carro *c =  q_item_getter(travel_queue(q , (i - stack_filling(s))));
             applyDiscount(c , 0.1 * (precoGetter(c)));
         }else{
@@ -99,7 +97,6 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     scanf(" %d", &saida);
     preco = 3*saida;
     saida += chegada;
-    sorteio(s , q);
     carro *c = carro_cria(placa, chegada, saida, preco, 0);
     if(stack_search(s, c) || queue_search(q, c)) {
         printf("Carro já estacionado!\n");
@@ -107,6 +104,7 @@ int carro_checkin(queue *q, stack *s , int verbose) {
     }
 
     carro_checkout(c , q , s);
+    sorteio(s , q);
     int rejeicao = carro_rejeicao(c , q , s , verbose);
     if(rejeicao == 1) {
         stack_pile(s, c);
