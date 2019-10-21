@@ -64,6 +64,8 @@ int carro_checkout(carro *c, queue *q, stack *s) {
     }
 }
 
+//Sorteia um carro quando já se têm 4 carros no estacionamento (25% de 15 = 3.75) e aplica um desconto a ele
+//Considere o estacionamento como um array no qual a stack vem antes
 void sorteio(stack *s , queue *q){
     int max = (queue_filling(q) + stack_filling(s));
     if(max > 3){
@@ -78,10 +80,10 @@ void sorteio(stack *s , queue *q){
         }
         if(i >= stack_filling(s)){
             carro *c =  q_item_getter(travel_queue(q , (i - stack_filling(s))));
-            applyDiscount(c , 0.1 * (precoGetter(c)));
+            if(descontoGetter(c) == 0) applyDiscount(c , 0.1 * (precoGetter(c)));
         }else{
             carro *c =  s_item_getter(travel_stack(s , i));
-            applyDiscount(c , 0.1 * (precoGetter(c)));
+            if(descontoGetter(c) == 0) applyDiscount(c , 0.1 * (precoGetter(c)));
         }
     }
 }
@@ -118,7 +120,7 @@ int carro_checkin(queue *q, stack *s , int verbose) {
 
 }
 
-//--------------------------------------------------------------------------------------------------------------------------------------------
+//Imprime todos os carros no estacionamento, imprimindo primeiro o pátio 1 (stack)
 void print_estacionamento(stack *s , queue *q){
     printf("Pátio 1:\n");
     print_stack(s);
@@ -127,7 +129,7 @@ void print_estacionamento(stack *s , queue *q){
 }
 
 
-
+//Menu para o usuário interagir
 int main() {
     printf("Opçoes de verbose?\n[1/0]");
     int verbose;

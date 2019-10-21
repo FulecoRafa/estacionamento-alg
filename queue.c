@@ -162,6 +162,7 @@ carro *queue_next(queue *q){
     }
 }
 
+//Imprime cada item da queue
 void print_queue(queue *q){
     q_node* it = q->HEAD;
     while(it){
@@ -190,6 +191,7 @@ int queue_search(queue *q, carro *c) {
     return 0;
 }
 
+//Viaja na queue para tornar o acesso como o de um vetor
 q_node *travel_queue(queue *q , int index){
     q_node *it;
     it = q->HEAD;

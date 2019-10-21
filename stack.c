@@ -144,6 +144,7 @@ carro *stack_unpile(stack *s){
     }
 }
 
+//Imprime cada item da stack
 void print_stack(stack *s){
     s_node* it = s->TOP;
     while(it){
@@ -172,6 +173,7 @@ int stack_search(stack *s, carro *c) {
     return 0;
 }
 
+//Viaja na stack para tornar o acesso como o de um vetor
 s_node *travel_stack(stack *s , int index){
     s_node *it;
     it = s->TOP;
