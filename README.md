@@ -1,2 +1,3 @@
 # estacionamento-alg
-Trabalho de alg1 para fazer o estacionamento
+Rafael Tavares oliveira 11219071
+Pedro Henrique Nieuwenhoff 10377729
